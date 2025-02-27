@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird Clone</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background: url('background.png') no-repeat center center;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 800;
+        canvas.height = 500;
+
+        const playerImg = new Image();
+        playerImg.src = "player.png"; // Change this to your custom player image
+
+        let player = {
+            x: 100,
+            y: 250,
+            width: 40,
+            height: 40,
+            velocity: 0,
+            gravity: 0.5,
+            jumpPower: -8
+        };
+
+        let pipes = [];
+        let frame = 0;
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+            player.velocity += player.gravity;
+            player.y += player.velocity;
+
+            if (frame % 100 === 0) {
+                let gap = 120;
+                let randomHeight = Math.random() * (canvas.height - gap - 100) + 50;
+                pipes.push({ x: canvas.width, y: 0, width: 50, height: randomHeight });
+                pipes.push({ x: canvas.width, y: randomHeight + gap, width: 50, height: canvas.height - randomHeight - gap });
+            }
+
+            pipes.forEach((pipe, index) => {
+                pipe.x -= 3;
+                ctx.fillStyle = "green";
+                ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
+                if (pipe.x + pipe.width < 0) {
+                    pipes.splice(index, 1);
+                }
+            });
+
+            if (player.y + player.height > canvas.height || player.y < 0) {
+                location.reload(); // Restart game if player hits the ground or flies too high
+            }
+
+            pipes.forEach(pipe => {
+                if (
+                    player.x < pipe.x + pipe.width &&
+                    player.x + player.width > pipe.x &&
+                    player.y < pipe.y + pipe.height &&
+                    player.y + player.height > pipe.y
+                ) {
+                    location.reload(); // Restart game on collision
+                }
+            });
+
+            frame++;
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space") {
+                player.velocity = player.jumpPower;
+            }
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>
