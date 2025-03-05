@@ -193,8 +193,8 @@ var Game = (function () {
 }());
 var Bird = (function () {
     function Bird(domElement, flyingProperties) {
-        this.width = 34;
-        this.height = 24;
+        this.width = 50;
+        this.height = 50;
         this.velocity = 0;
         this.position = 180;
         this.rotation = 0;
