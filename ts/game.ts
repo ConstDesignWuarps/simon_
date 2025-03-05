@@ -172,8 +172,8 @@ class Game {
 class Bird {
     protected domElement: HTMLElement;
     protected flyingProperties: FlyingProperties;
-    protected width = 70;
-    protected height =70;
+    protected width = 90;
+    protected height 90;
     protected velocity = 0;
     protected position = 180;
     protected rotation = 0;
